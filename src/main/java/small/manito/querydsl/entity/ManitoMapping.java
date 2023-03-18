@@ -1,16 +1,15 @@
-package small.manito.entity;
+package small.manito.querydsl.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Lazy;
+import lombok.*;
+import small.manito.type.ManitoResultStatus;
 
 @Entity
 @Builder
+@Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
 public class ManitoMapping {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,12 +19,24 @@ public class ManitoMapping {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "userId")
     private User user;
-    private Long manitoId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manitoId")
+    private User manito;
+
+    @Enumerated(EnumType.STRING)
+    private ManitoResultStatus result;
 
     static public ManitoMapping mapping(Long groupId, User user){
         return ManitoMapping.builder()
                 .groupId(groupId)
                 .user(user)
+                .build();
+    }
+
+    public void setManitoId(Long manitoId){
+        this.manito = User.builder()
+                .id(manitoId)
                 .build();
     }
 }

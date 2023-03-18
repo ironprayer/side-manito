@@ -1,4 +1,4 @@
-package small.manito.entity;
+package small.manito.querydsl.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,4 +18,5 @@ public class User {
     private Long id;
     private String name;
     private String nickName;
+
 }

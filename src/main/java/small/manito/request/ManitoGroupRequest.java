@@ -1,19 +1,16 @@
 package small.manito.request;
 
 import lombok.*;
-import small.manito.entity.ManitoGroup;
+import small.manito.querydsl.entity.ManitoGroup;
 import small.manito.type.ManitoStatus;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Builder
 @Getter
-@ToString
-@NoArgsConstructor()
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ManitoGroupRequest {
     private Long groupId;
+    private String adminId;
     private String name;
     private Long maxNumber;
     private LocalDate startDate;
@@ -32,6 +29,6 @@ public class ManitoGroupRequest {
     }
 
     private String generateAdminId(){
-        return String.valueOf(UUID.randomUUID());
+        return  String.valueOf(UUID.randomUUID()).substring(0,5);
     }
 }
