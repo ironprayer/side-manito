@@ -1,4 +1,4 @@
-package small.manito.response;
+package small.manito.controller.response;
 
 import lombok.Builder;
 

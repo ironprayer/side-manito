@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/manito
+    username: manito
+    password: manito-pw
+
+server :
+  port : 5055

@@ -2,8 +2,8 @@ package small.manito.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import small.manito.querydsl.entity.ManitoMapping;
 import small.manito.repository.custom.ManitoGroupMappingCustomRepository;
+import small.manito.querydsl.entity.ManitoMapping;
 
 import java.util.List;
 

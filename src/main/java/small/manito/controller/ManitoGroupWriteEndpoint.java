@@ -1,18 +1,13 @@
 package small.manito.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import small.manito.querydsl.entity.ManitoMapping;
-import small.manito.request.ManitoGroupRequest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import small.manito.controller.request.ManitoGroupRequest;
 import small.manito.service.ManitoGroupService;
 
-import java.util.List;
-import java.util.Random;
-
-@RestController
 @RequiredArgsConstructor
-public class ManitoGroupEndpoint {
+public class ManitoGroupWriteEndpoint {
     private final ManitoGroupService manitoGroupService;
 
     /* ( 사용자 정의 자료형 만들 필요가 있겠군 )
@@ -36,16 +31,4 @@ public class ManitoGroupEndpoint {
         manitoGroupService.start(manitoGroupRequest.getAdminId(), manitoGroupRequest.getGroupId());
         manitoGroupService.matchingManito(manitoGroupRequest.getGroupId());
     }
-
-    /*
-    - 자신의 마니또가 누구인지 모두 확인하거나 또는 마니또 그룹 완료 상태라면 마니또 어드민 아이디를 통해 전체 리스트를 확인할 수 있다.
-     */
-    @GetMapping("/groups/result")
-    void getMembersInManitoGroup(
-            @RequestParam(name="adminId") Long adminId,
-            @RequestParam(name="groupId") Long groupId
-    ){
-        manitoGroupService.getResults(groupId);
-    }
-
 }

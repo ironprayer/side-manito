@@ -8,7 +8,7 @@ import small.manito.querydsl.entity.ManitoGroup;
 
 @Repository
 public interface ManitoGroupRepository extends JpaRepository<ManitoGroup, Long> {
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update ManitoGroup m set m.status = small.manito.type.ManitoStatus.COMPLETED where m.expiredDate <= current_timestamp")
     void endOfAllMantioGroup();
 }

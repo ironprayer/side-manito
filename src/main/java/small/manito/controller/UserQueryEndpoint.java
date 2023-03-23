@@ -24,4 +24,8 @@ public class UserQueryEndpoint {
     ){
         return manitoGroupService.getManitoResult(groupId, userId, manitoName);
     }
+
+    // 채팅 기록
+    @GetMapping("users/chat")
+    void getChat(){}
 }

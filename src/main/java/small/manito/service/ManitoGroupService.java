@@ -72,6 +72,7 @@ public class ManitoGroupService {
         }
     }
 
+    // 별도로 빠져있는 것이 좋다 -> package 하나 만들자
     @Scheduled(fixedDelay = 1000 * 60)
     @Transactional
     public void end(){

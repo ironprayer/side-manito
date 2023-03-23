@@ -1,4 +1,4 @@
-package small.manito.request;
+package small.manito.controller.request;
 
 import lombok.*;
 import small.manito.querydsl.entity.ManitoGroup;
