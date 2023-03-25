@@ -2,21 +2,36 @@ package small.manito.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import small.manito.controller.request.LoginRequest;
 import small.manito.controller.request.UserRequest;
+import small.manito.controller.response.TokenResponse;
+import small.manito.service.AuthService;
 import small.manito.service.ManitoGroupService;
 
 @RestController
 @RequiredArgsConstructor
 public class UserWriteEndpoint {
     private final ManitoGroupService manitoGroupService;
+    private final AuthService authService;
 
     // 회원가입
-    @PostMapping("user")
-    void createUser(){};
+    @PostMapping("users")
+    void createUser(
+            @RequestBody LoginRequest loginRequest
+    ){
+        authService.create(loginRequest.getId(), loginRequest.getPassword());
+
+        // 아이디 중복만 체크해서 알려주면 되겠다
+    };
 
     // 로그인
     @PostMapping("users/login")
-    void login(){};
+    TokenResponse login(@RequestBody LoginRequest loginRequest){
+
+        var token = authService.login(loginRequest.getId(), loginRequest.getPassword());
+        System.out.println(token);
+        return token;
+    };
 
     /*
     - 마니또 그룹 아이디가 있고 그룹 아이디를 통해 참여자 등록을 할 수 있다.
@@ -24,7 +39,7 @@ public class UserWriteEndpoint {
 
      */
     @PostMapping("users/join")
-    void joinRequestGroup(
+    void joinGroup(
             @RequestBody UserRequest userRequest){
         manitoGroupService.join(userRequest.getGroupId(), userRequest.toUser());
     }
