@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -17,16 +18,13 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
-    private final JwtTokenProvider jwtTokenProvider;
-
+    
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             var jwt = getJwtFromRequest(request);
-            System.out.println(jwt);
-            if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-                var userId = jwtTokenProvider.parseUserId(jwt);
+            if (StringUtils.hasText(jwt) && JwtTokenProvider.validateToken(jwt)) {
+                var userId = JwtTokenProvider.parseUserId(jwt);
                 var authentication = new UserAuthentication(userId);
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -34,23 +32,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
                 if (!StringUtils.hasText(jwt)) {
-                    System.out.println("ttt");
                     request.setAttribute("unauthorization", "401 인증키 없음.");
                 }
 
-                if (jwtTokenProvider.validateToken(jwt)) {
-                    System.out.println("dsfsdf");
+                if (JwtTokenProvider.validateToken(jwt)) {
                     request.setAttribute("unauthorization", "401-001 인증키 만료.");
                 }
             }
         } catch (Exception ex) {
-            logger.error("Could not set user authentication in security context", ex);
+            System.out.println("Could not set user authentication in security context");
         }
 
-        System.out.println(request);
+        System.out.println("servletPath:  " + request.getServletPath().toString());
+        System.out.println("test : " + request.toString());
         filterChain.doFilter(request, response);
-        System.out.println("여기다 임마");
-        System.out.println(response.getStatus());
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {

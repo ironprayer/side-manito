@@ -3,13 +3,17 @@ package small.manito.auth;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class UserAuthentication extends AbstractAuthenticationToken {
-
-    private AuthPayload authPayload;
+    private final AuthPayload authPayload;
 
     public UserAuthentication(Long userId) {
         super(null);
         this.authPayload = new AuthPayload(userId);
         setAuthenticated(true);
+    }
+
+    @Override
+    public void setAuthenticated(boolean authenticated) {
+        super.setAuthenticated(authenticated);
     }
 
     @Override

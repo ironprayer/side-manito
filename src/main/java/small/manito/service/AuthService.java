@@ -23,8 +23,6 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final JwtTokenProvider jwtTokenProvider;
-
     public void create(String userId, String password){
         if( !userRepository.findByUserId(userId).isEmpty() ){
             throw new UserDuplicationException(userId);
@@ -47,7 +45,7 @@ public class AuthService {
         }
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenResponse tokenInfo = jwtTokenProvider.generateToken(user.getId());
+        TokenResponse tokenInfo = JwtTokenProvider.generateToken(user.getId());
 
         return tokenInfo;
     }

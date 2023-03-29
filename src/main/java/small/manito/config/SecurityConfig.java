@@ -15,11 +15,8 @@ import small.manito.auth.JwtAuthenticationFilter;
 import small.manito.auth.JwtTokenProvider;
 
 @Configuration
-@EnableWebSecurity
-@RequiredArgsConstructor
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
-
-    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -34,13 +31,14 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(
-                        (request) -> request.requestMatchers("/auth/**", "/", "/users", "/hc", "/users/login")
+                        (request) -> request.requestMatchers( "/", "/users", "/hc", "/users/login")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
