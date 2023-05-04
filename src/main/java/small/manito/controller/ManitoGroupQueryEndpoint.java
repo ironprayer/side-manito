@@ -1,11 +1,13 @@
 package small.manito.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import small.manito.service.ManitoGroupService;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "마니또", description = "마니또 API")
 public class ManitoGroupQueryEndpoint {
     private final ManitoGroupService manitoGroupService;
 

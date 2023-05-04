@@ -15,7 +15,7 @@ import small.manito.auth.JwtAuthenticationFilter;
 import small.manito.auth.JwtTokenProvider;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity()
 public class SecurityConfig {
 
     @Bean
@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(
-                        (request) -> request.requestMatchers( "/", "/users", "/hc", "/users/login")
+                        (request) -> request.requestMatchers( "/", "/users", "/hc", "/users/login", "/v3/**", "/swagger-ui/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

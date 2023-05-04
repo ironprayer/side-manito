@@ -33,9 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } else {
                 if (!StringUtils.hasText(jwt)) {
                     request.setAttribute("unauthorization", "401 인증키 없음.");
-                }
-
-                if (JwtTokenProvider.validateToken(jwt)) {
+                }else if (JwtTokenProvider.validateToken(jwt)) {
                     request.setAttribute("unauthorization", "401-001 인증키 만료.");
                 }
             }
@@ -43,8 +41,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("Could not set user authentication in security context");
         }
 
-        System.out.println("servletPath:  " + request.getServletPath().toString());
-        System.out.println("test : " + request.toString());
         filterChain.doFilter(request, response);
     }
 

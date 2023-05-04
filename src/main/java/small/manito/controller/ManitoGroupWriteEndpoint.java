@@ -1,9 +1,11 @@
 package small.manito.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import small.manito.auth.AuthPayload;
 import small.manito.controller.request.ManitoGroupRequest;
 import small.manito.service.ManitoGroupService;
 
@@ -19,8 +21,9 @@ public class ManitoGroupWriteEndpoint {
         - 마니또 그룹을 만들면 마니또 그룹 아이디랑 어드민 아이디를 발급한다.
      */
     @PostMapping("/groups")
-    void createManitoGroup(@RequestBody ManitoGroupRequest manitoGroupRequest){
-        System.out.println("comple11");
+    void createManitoGroup(@RequestBody ManitoGroupRequest manitoGroupRequest,
+                           @AuthenticationPrincipal AuthPayload authPayload){
+        System.out.println("111 " + authPayload.getUserId());
         manitoGroupService.create(manitoGroupRequest.toManito());
         System.out.println("comple");
     }
