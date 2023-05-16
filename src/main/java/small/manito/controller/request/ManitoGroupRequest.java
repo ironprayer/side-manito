@@ -1,7 +1,6 @@
 package small.manito.controller.request;
 
 import io.swagger.v3.oas.annotations.Hidden;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.*;
 import small.manito.querydsl.entity.ManitoGroup;
 import small.manito.type.ManitoStatus;

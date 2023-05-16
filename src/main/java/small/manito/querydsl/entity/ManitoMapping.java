@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import small.manito.type.ManitoResultStatus;
 
+import javax.swing.*;
+
 @Entity
 @Builder
 @Getter
@@ -14,9 +16,12 @@ public class ManitoMapping {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long groupId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "groupId")
+    private ManitoGroup manitoGroup;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
@@ -29,7 +34,9 @@ public class ManitoMapping {
 
     static public ManitoMapping mapping(Long groupId, User user){
         return ManitoMapping.builder()
-                .groupId(groupId)
+                .manitoGroup(ManitoGroup.builder()
+                        .id(groupId)
+                        .build())
                 .user(user)
                 .build();
     }

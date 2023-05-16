@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import small.manito.querydsl.dto.GroupDTO;
 import small.manito.querydsl.dto.GroupMappingDTO;
 import small.manito.querydsl.entity.ManitoGroup;
 import small.manito.querydsl.entity.ManitoMapping;
@@ -25,8 +26,13 @@ public class ManitoGroupService {
     private final ManitoMappingRepository manitoMappingRepository;
     private final UserRepository userRepository;
 
-    public void create(ManitoGroup manitoGroup){
-        manitoGroupRepository.save(manitoGroup);
+    public void create(ManitoGroup manitoGroup, Long userId){
+        var saveManitoGroup = manitoGroupRepository.save(manitoGroup);
+        System.out.println(manitoGroup);
+        manitoMappingRepository.save(ManitoMapping.builder()
+                .manitoGroup(saveManitoGroup)
+                .user(User.builder().id(userId).build())
+                .build());
     }
 
     @Transactional
@@ -53,13 +59,18 @@ public class ManitoGroupService {
         //검증 단계 필요 (adminId의 group 권한) -> 권한 없으면 Exception 처리
         var manitoGroup = manitoGroupRepository.findById(groupId).get();
 
-        if(manitoGroup.isFull()) manitoGroup.changeStatus(ManitoStatus.PROCEEDING);
+        if(manitoGroup.isFull()) manitoGroup.changeStatus(ManitoStatus.ONGOING);
     }
 
+//    @Transactional
+//    public void matchingManito(Long groupId){
+//        var members = manitoMappingRepository.findAllByGroupId(groupId);
+//        shuffleMember(members);
+//    }
+
     @Transactional
-    public void matchingManito(Long groupId){
-        var members = manitoMappingRepository.findAllByGroupId(groupId);
-        shuffleMember(members);
+    public List<GroupDTO> getManitoGroupWithStatus(Long userId, ManitoStatus status){
+        return manitoMappingRepository.findGroupsWithUserIdAndStatus(userId, status);
     }
 
     private void shuffleMember(List<ManitoMapping> members){
@@ -86,10 +97,10 @@ public class ManitoGroupService {
         return manitoMappingRepository.findGroupMapping(groupId, userId);
     }
 
-    public List<ManitoMapping> getResults(Long groupId) {
-        var manitoMappings = manitoMappingRepository.findAllByGroupId(groupId);
-        manitoMappings.forEach(System.out::println);
-        return manitoMappings;
-    }
+//    public List<ManitoMapping> getResults(Long groupId) {
+//        var manitoMappings = manitoMappingRepository.findAllByGroupId(groupId);
+//        manitoMappings.forEach(System.out::println);
+//        return manitoMappings;
+//    }
 
 }
