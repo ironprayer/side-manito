@@ -1,5 +1,8 @@
 package small.manito.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import small.manito.controller.request.LoginRequest;
@@ -38,6 +41,7 @@ public class UserWriteEndpoint {
     - 참여자 등록 시에는 실제 이름과 닉네임을 필수로 받는다.
 
      */
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("users/join")
     void joinGroup(
             @RequestBody UserRequest userRequest){

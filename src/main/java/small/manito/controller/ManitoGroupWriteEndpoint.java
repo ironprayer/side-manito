@@ -23,9 +23,7 @@ public class ManitoGroupWriteEndpoint {
     @PostMapping("/groups")
     void createManitoGroup(@RequestBody ManitoGroupRequest manitoGroupRequest,
                            @AuthenticationPrincipal AuthPayload authPayload){
-        System.out.println("111 " + authPayload.getUserId());
         manitoGroupService.create(manitoGroupRequest.toManito());
-        System.out.println("comple");
     }
 
     // 마니또 그룹에 지정된 인원이 모두 참여 등록을 하면 마니또 그룹이 준비 상태가 된다. (?)
