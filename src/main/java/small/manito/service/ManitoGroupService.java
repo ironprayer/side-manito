@@ -7,12 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import small.manito.querydsl.dto.GroupDTO;
 import small.manito.querydsl.dto.GroupMappingDTO;
+import small.manito.querydsl.entity.Invite;
 import small.manito.querydsl.entity.ManitoGroup;
 import small.manito.querydsl.entity.ManitoMapping;
 import small.manito.querydsl.entity.User;
+import small.manito.repository.InviteRepository;
 import small.manito.repository.ManitoGroupRepository;
 import small.manito.repository.ManitoMappingRepository;
 import small.manito.repository.UserRepository;
+import small.manito.type.InviteAnswer;
+import small.manito.type.InviteAnswerStatus;
 import small.manito.type.ManitoStatus;
 
 import java.util.List;
@@ -24,11 +28,12 @@ public class ManitoGroupService {
 
     private final ManitoGroupRepository manitoGroupRepository;
     private final ManitoMappingRepository manitoMappingRepository;
+    private final InviteRepository inviteRepository;
     private final UserRepository userRepository;
 
     public void create(ManitoGroup manitoGroup, Long userId){
+        manitoGroup.changeStatus(ManitoStatus.WAITING);
         var saveManitoGroup = manitoGroupRepository.save(manitoGroup);
-        System.out.println(manitoGroup);
         manitoMappingRepository.save(ManitoMapping.builder()
                 .manitoGroup(saveManitoGroup)
                 .user(User.builder().id(userId).build())
@@ -36,22 +41,46 @@ public class ManitoGroupService {
     }
 
     @Transactional
-    public void join(Long groupId, User user){
-        var manitoGroup = manitoGroupRepository.findById(groupId).get();
-
-        // 이름 중복 체크가 필요하겠는데. (정식으로 만들거면 필요할듯)
-        if(isDupName()) {
-            System.out.println("이름이 중복됩니다");
-        }
-
-        if(!manitoGroup.isFull()) {
-            manitoMappingRepository.save(ManitoMapping.mapping(groupId, user));
-            manitoGroup.increaseCurrentNumber();
+    public void answerInvited(InviteAnswer inviteAnswer){
+        if(inviteAnswer.getIsAccept()){
+            acceptJoin(inviteAnswer);
+        }else{
+            rejectJoin(inviteAnswer);
         }
     }
 
-    private boolean isDupName(){
-        return false;
+    private void acceptJoin(InviteAnswer inviteAnswer){
+        var invitedMapping = inviteRepository.findByManitoGroupAndGuest(
+                ManitoGroup.builder()
+                        .id(inviteAnswer.getGroupId())
+                        .build(),
+                User.builder()
+                        .id(inviteAnswer.getUserId())
+                        .build()
+        ).get();
+
+        if(!(invitedMapping == null)){
+            invitedMapping.changeStatus(InviteAnswerStatus.ACCEPT);
+            manitoMappingRepository.save(ManitoMapping
+                    .builder()
+                    .manitoGroup(invitedMapping.getManitoGroup())
+                    .user(invitedMapping.getGuest())
+                    .build()
+            );
+        }
+    }
+
+    private void rejectJoin(InviteAnswer inviteAnswer){
+        var invitedMapping = inviteRepository.findByManitoGroupAndGuest(
+                ManitoGroup.builder()
+                        .id(inviteAnswer.getGroupId())
+                        .build(),
+                User.builder()
+                        .id(inviteAnswer.getUserId())
+                        .build()
+        ).get();
+
+        invitedMapping.changeStatus(InviteAnswerStatus.REJECT);
     }
 
     @Transactional
@@ -60,6 +89,23 @@ public class ManitoGroupService {
         var manitoGroup = manitoGroupRepository.findById(groupId).get();
 
         if(manitoGroup.isFull()) manitoGroup.changeStatus(ManitoStatus.ONGOING);
+    }
+
+    @Transactional
+    public void inviteUser(Long groupId, Long hostId, String guestId){
+        var manitoGroup = manitoGroupRepository.findById(groupId).get();
+        var guest = userRepository.findByUserId(guestId).get();
+
+        if(!manitoGroup.isFull()) {
+            inviteRepository.save(
+                    Invite.builder()
+                            .manitoGroup(manitoGroup)
+                            .hostId(hostId)
+                            .guest(guest)
+                            .status(InviteAnswerStatus.PENDING)
+                            .build()
+            );
+        }
     }
 
 //    @Transactional
@@ -71,6 +117,19 @@ public class ManitoGroupService {
     @Transactional
     public List<GroupDTO> getManitoGroupWithStatus(Long userId, ManitoStatus status){
         return manitoMappingRepository.findGroupsWithUserIdAndStatus(userId, status);
+    }
+
+    @Transactional
+    public User getUser(Long userId){
+        return userRepository.findById(userId).get();
+    }
+
+    public List<GroupDTO> getManitoGroupInvited(Long userId){
+        return inviteRepository
+                .findGroupsInGuestId(userId).stream().map((invite -> {
+                    return invite.toGroupDTO();
+                }))
+                .toList();
     }
 
     private void shuffleMember(List<ManitoMapping> members){

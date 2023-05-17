@@ -1,7 +1,11 @@
 package small.manito.controller;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import small.manito.auth.AuthPayload;
+import small.manito.controller.response.UserResponse;
 import small.manito.querydsl.dto.GroupMappingDTO;
 import small.manito.service.ManitoGroupService;
 
@@ -11,6 +15,25 @@ public class UserQueryEndpoint {
 
     private final ManitoGroupService manitoGroupService;
     // 궁금증 컨트롤러가 다른데 도메인 시작이 같아도 될까??
+
+
+    @GetMapping("users")
+    UserResponse getUser(
+            @RequestParam("id") Long id
+    ){
+        return UserResponse.builder()
+                .id(manitoGroupService.getUser(id).getUserId())
+                .build();
+    }
+
+    @GetMapping("users/my")
+    UserResponse getMyInfo(
+            @AuthenticationPrincipal AuthPayload authPayload
+            ){
+        return UserResponse.builder()
+                .id(manitoGroupService.getUser(authPayload.getUserId()).getUserId())
+                .build();
+    }
 
     /* ???
     - 마니또 기간이 지나면 마니또 그룹 상태는 완료 상태가 된다.

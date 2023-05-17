@@ -19,7 +19,7 @@ public class ManitoGroup {
     private String adminId;
     private Long currentNumber;
     private Long maxNumber;
-
+    private Long ownerId;
     @Enumerated(EnumType.STRING)
     private ManitoStatus status;
     private LocalDate startDate;

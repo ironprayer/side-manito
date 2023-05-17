@@ -19,13 +19,13 @@ public class ManitoGroupRequest {
     private LocalDate startDate;
     private LocalDate expiredDate;
 
-    public ManitoGroup toManito(){
+    public ManitoGroup toManito(Long userId){
         return ManitoGroup.builder()
                 .name(name)
                 .maxNumber(maxNumber)
                 .adminId(generateAdminId())
                 .currentNumber(0L)
-                .status(ManitoStatus.WAITING)
+                .ownerId(userId)
                 .startDate(startDate)
                 .expiredDate(expiredDate)
                 .build();

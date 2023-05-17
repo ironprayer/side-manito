@@ -6,6 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 @Builder
-public class ManitoResultRequest {
+public class ManitoResultResponse {
     private List<Map<String, String>> manitoResult;
 }

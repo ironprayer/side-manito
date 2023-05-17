@@ -36,18 +36,6 @@ public class UserWriteEndpoint {
         return token;
     };
 
-    /*
-    - 마니또 그룹 아이디가 있고 그룹 아이디를 통해 참여자 등록을 할 수 있다.
-    - 참여자 등록 시에는 실제 이름과 닉네임을 필수로 받는다.
-
-     */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
-    @PostMapping("users/join")
-    void joinGroup(
-            @RequestBody UserRequest userRequest){
-        manitoGroupService.join(userRequest.getGroupId(), userRequest.toUser());
-    }
-
     // 회원탈퇴
     @DeleteMapping("users")
     void deleteUser(){};
