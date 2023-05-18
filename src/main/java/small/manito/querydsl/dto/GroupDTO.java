@@ -4,7 +4,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import small.manito.type.ManitoStatus;
+import small.manito.global.type.ManitoStatus;
 
 import java.time.LocalDate;
 

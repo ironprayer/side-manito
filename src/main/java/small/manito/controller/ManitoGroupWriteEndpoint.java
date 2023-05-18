@@ -9,9 +9,8 @@ import small.manito.auth.AuthPayload;
 import small.manito.controller.request.InviteAnswerRequest;
 import small.manito.controller.request.InviteUserRequest;
 import small.manito.controller.request.ManitoGroupRequest;
-import small.manito.controller.request.UserRequest;
 import small.manito.service.ManitoGroupService;
-import small.manito.type.InviteAnswer;
+import small.manito.global.type.InviteAnswer;
 
 @RestController
 @RequiredArgsConstructor

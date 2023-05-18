@@ -2,7 +2,7 @@ package small.manito.repository.custom;
 
 import small.manito.querydsl.dto.GroupDTO;
 import small.manito.querydsl.dto.GroupMappingDTO;
-import small.manito.type.ManitoStatus;
+import small.manito.global.type.ManitoStatus;
 
 import java.util.List;
 

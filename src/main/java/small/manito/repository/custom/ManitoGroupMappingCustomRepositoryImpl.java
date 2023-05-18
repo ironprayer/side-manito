@@ -2,20 +2,15 @@ package small.manito.repository.custom;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import org.springframework.data.jpa.repository.Modifying;
 import small.manito.querydsl.dto.GroupDTO;
 import small.manito.querydsl.dto.GroupMappingDTO;
 import small.manito.querydsl.dto.QGroupDTO;
 import small.manito.querydsl.dto.QGroupMappingDTO;
-import small.manito.querydsl.entity.ManitoMapping;
-import small.manito.type.ManitoStatus;
+import small.manito.global.type.ManitoStatus;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static small.manito.querydsl.entity.QManitoMapping.manitoMapping;
-import static small.manito.type.ManitoStatus.ENDED;
 
 public class ManitoGroupMappingCustomRepositoryImpl implements ManitoGroupMappingCustomRepository {
     private final JPAQueryFactory queryFactory;

@@ -38,10 +38,11 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(
-                        (request) -> request.requestMatchers( "/", "/users", "/hc", "/users/login", "/v3/**", "/swagger-ui/**")
+                        (request) -> request.requestMatchers( "/", "/socket.io/", "/hello", "/users", "/hc", "/users/login", "/v3/**", "/swagger-ui/**" , "/app/**")
                                 .permitAll()
                                 .anyRequest()
-                                .authenticated()
+                                //.authenticated()
+                                .permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

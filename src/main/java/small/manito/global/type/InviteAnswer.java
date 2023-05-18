@@ -1,4 +1,4 @@
-package small.manito.type;
+package small.manito.global.type;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package small.manito.querydsl.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.ToString;
-import small.manito.type.ManitoResultStatus;
+import small.manito.global.type.ManitoResultStatus;
 
 @ToString
 public class GroupMappingDTO {

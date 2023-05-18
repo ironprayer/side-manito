@@ -2,7 +2,7 @@ package small.manito.querydsl.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import small.manito.type.ManitoStatus;
+import small.manito.global.type.ManitoStatus;
 
 import java.time.LocalDate;
 

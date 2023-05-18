@@ -3,8 +3,7 @@ package small.manito.querydsl.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import small.manito.querydsl.dto.GroupDTO;
-import small.manito.type.InviteAnswer;
-import small.manito.type.InviteAnswerStatus;
+import small.manito.global.type.InviteAnswerStatus;
 
 @Entity
 @Getter

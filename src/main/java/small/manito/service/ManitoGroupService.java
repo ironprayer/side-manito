@@ -15,9 +15,9 @@ import small.manito.repository.InviteRepository;
 import small.manito.repository.ManitoGroupRepository;
 import small.manito.repository.ManitoMappingRepository;
 import small.manito.repository.UserRepository;
-import small.manito.type.InviteAnswer;
-import small.manito.type.InviteAnswerStatus;
-import small.manito.type.ManitoStatus;
+import small.manito.global.type.InviteAnswer;
+import small.manito.global.type.InviteAnswerStatus;
+import small.manito.global.type.ManitoStatus;
 
 import java.util.List;
 
@@ -31,6 +31,7 @@ public class ManitoGroupService {
     private final InviteRepository inviteRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void create(ManitoGroup manitoGroup, Long userId){
         manitoGroup.changeStatus(ManitoStatus.WAITING);
         var saveManitoGroup = manitoGroupRepository.save(manitoGroup);
@@ -38,6 +39,11 @@ public class ManitoGroupService {
                 .manitoGroup(saveManitoGroup)
                 .user(User.builder().id(userId).build())
                 .build());
+    }
+
+    @Transactional
+    public ManitoGroup getGroup(Long groupId){
+        return manitoGroupRepository.findById(groupId).get();
     }
 
     @Transactional

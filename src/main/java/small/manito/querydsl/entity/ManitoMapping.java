@@ -2,9 +2,7 @@ package small.manito.querydsl.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import small.manito.type.ManitoResultStatus;
-
-import javax.swing.*;
+import small.manito.global.type.ManitoResultStatus;
 
 @Entity
 @Builder
