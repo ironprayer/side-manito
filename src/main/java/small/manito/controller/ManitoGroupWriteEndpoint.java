@@ -3,12 +3,14 @@ package small.manito.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import small.manito.auth.AuthPayload;
 import small.manito.controller.request.InviteAnswerRequest;
 import small.manito.controller.request.InviteUserRequest;
 import small.manito.controller.request.ManitoGroupRequest;
+import small.manito.controller.request.StartGroupRequest;
 import small.manito.service.ManitoGroupService;
 import small.manito.global.type.InviteAnswer;
 
@@ -63,11 +65,12 @@ public class ManitoGroupWriteEndpoint {
     // 마니또 그룹에 지정된 인원이 모두 참여 등록을 하면 마니또 그룹이 준비 상태가 된다. (?)
     // admin 유저가 시작할 수 있다.
     // 시작되면, 각 유저에게 마니또가 매칭이 된다.
-    @PostMapping("/groups/start")
+    @PutMapping("/groups/start")
     void startManito(
-            @RequestBody ManitoGroupRequest manitoGroupRequest
+            @RequestBody StartGroupRequest startGroupRequest,
+            @AuthenticationPrincipal AuthPayload authPayload
     ){
-        manitoGroupService.start(manitoGroupRequest.getAdminId(), manitoGroupRequest.getGroupId());
+        manitoGroupService.start(startGroupRequest.getGroupId(), authPayload.getUserId());
 //        manitoGroupService.matchingManito(manitoGroupRequest.getGroupId());
     }
 }

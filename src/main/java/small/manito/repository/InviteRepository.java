@@ -14,5 +14,7 @@ import java.util.Optional;
 public interface InviteRepository extends JpaRepository<Invite, Long> {
     @Query("select i from Invite i where i.guest.id = :guestId and i.status = PENDING ")
     List<Invite> findGroupsInGuestId(Long guestId);
+    List<Invite> findAllByManitoGroup(ManitoGroup manitoGroup);
+    Optional<Invite> findByGuest(User gest);
     Optional<Invite> findByManitoGroupAndGuest(ManitoGroup manitoGroup, User guest);
 }

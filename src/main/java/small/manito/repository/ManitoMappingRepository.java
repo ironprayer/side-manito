@@ -15,4 +15,7 @@ import java.util.List;
 public interface ManitoMappingRepository extends JpaRepository<ManitoMapping, Long>, ManitoGroupMappingCustomRepository {
 
     List<ManitoMapping> findAllByManitoGroup(ManitoGroup manitoGroup);
+
+    @Query("select m from ManitoMapping m where m.manitoGroup.id = :groupId and m.user.id = :userId or m.manito.id = :userId")
+    List<ManitoMapping> findChatTargets(@Param("groupId") Long groupId, @Param("userId") Long userId);
 }

@@ -5,12 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import small.manito.global.exception.InvalidUserException;
+import small.manito.global.exception.UnAuthorizedException;
+import small.manito.global.exception.UserNumberFallShortException;
+import small.manito.global.exception.UserNumberOverException;
 import small.manito.querydsl.dto.GroupDTO;
 import small.manito.querydsl.dto.GroupMappingDTO;
-import small.manito.querydsl.entity.Invite;
-import small.manito.querydsl.entity.ManitoGroup;
-import small.manito.querydsl.entity.ManitoMapping;
-import small.manito.querydsl.entity.User;
+import small.manito.querydsl.entity.*;
 import small.manito.repository.InviteRepository;
 import small.manito.repository.ManitoGroupRepository;
 import small.manito.repository.ManitoMappingRepository;
@@ -20,6 +21,7 @@ import small.manito.global.type.InviteAnswerStatus;
 import small.manito.global.type.ManitoStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Service
@@ -33,8 +35,13 @@ public class ManitoGroupService {
 
     @Transactional
     public void create(ManitoGroup manitoGroup, Long userId){
+        if(!manitoGroup.isCreateMaxNumber()) throw new UserNumberFallShortException();
+
         manitoGroup.changeStatus(ManitoStatus.WAITING);
+        manitoGroup.increaseCurrentNumber();
+
         var saveManitoGroup = manitoGroupRepository.save(manitoGroup);
+
         manitoMappingRepository.save(ManitoMapping.builder()
                 .manitoGroup(saveManitoGroup)
                 .user(User.builder().id(userId).build())
@@ -42,8 +49,17 @@ public class ManitoGroupService {
     }
 
     @Transactional
-    public ManitoGroup getGroup(Long groupId){
-        return manitoGroupRepository.findById(groupId).get();
+    public ManitoMapping getGroup(Long groupId){
+        return manitoMappingRepository.findAllByManitoGroup(
+                ManitoGroup.builder()
+                        .id(groupId)
+                        .build()
+        ).stream()
+                .filter(manitoMapping ->
+                {return manitoMapping.getManitoGroup().getOwnerId().equals(
+                        manitoMapping.getUser().getId()
+                );})
+                .findFirst().get();
     }
 
     @Transactional
@@ -65,11 +81,18 @@ public class ManitoGroupService {
                         .build()
         ).get();
 
+        if(invitedMapping.getManitoGroup().isFull()) throw new UserNumberOverException();
+
         if(!(invitedMapping == null)){
+            var manitoGroup = invitedMapping.getManitoGroup();
+
             invitedMapping.changeStatus(InviteAnswerStatus.ACCEPT);
+            manitoGroup.increaseCurrentNumber();
+
+            manitoGroupRepository.save(manitoGroup);
             manitoMappingRepository.save(ManitoMapping
                     .builder()
-                    .manitoGroup(invitedMapping.getManitoGroup())
+                    .manitoGroup(manitoGroup)
                     .user(invitedMapping.getGuest())
                     .build()
             );
@@ -90,19 +113,16 @@ public class ManitoGroupService {
     }
 
     @Transactional
-    public void start(String adminId, Long groupId) {
-        //검증 단계 필요 (adminId의 group 권한) -> 권한 없으면 Exception 처리
-        var manitoGroup = manitoGroupRepository.findById(groupId).get();
-
-        if(manitoGroup.isFull()) manitoGroup.changeStatus(ManitoStatus.ONGOING);
-    }
-
-    @Transactional
     public void inviteUser(Long groupId, Long hostId, String guestId){
         var manitoGroup = manitoGroupRepository.findById(groupId).get();
         var guest = userRepository.findByUserId(guestId).get();
 
-        if(!manitoGroup.isFull()) {
+        if(manitoGroup.isFull()) throw new UserNumberOverException();
+        if(hostId.equals(guest.getId())) throw new InvalidUserException();
+        var invite = inviteRepository
+                .findByManitoGroupAndGuest(manitoGroup,guest)
+                .orElseGet(() -> null);
+        if(!manitoGroup.isFull() && invite == null) {
             inviteRepository.save(
                     Invite.builder()
                             .manitoGroup(manitoGroup)
@@ -111,14 +131,10 @@ public class ManitoGroupService {
                             .status(InviteAnswerStatus.PENDING)
                             .build()
             );
+        } else {
+            throw new InvalidUserException();
         }
     }
-
-//    @Transactional
-//    public void matchingManito(Long groupId){
-//        var members = manitoMappingRepository.findAllByGroupId(groupId);
-//        shuffleMember(members);
-//    }
 
     @Transactional
     public List<GroupDTO> getManitoGroupWithStatus(Long userId, ManitoStatus status){
@@ -138,6 +154,21 @@ public class ManitoGroupService {
                 .toList();
     }
 
+    @Transactional
+    public void start(Long groupId, Long userId) {
+        // TODO 검증 단계 필요 (adminId의 group 권한) -> 권한 없으면 Exception 처리
+        var manitoGroup = manitoGroupRepository.findById(groupId).get();
+
+        if(!manitoGroup.getOwnerId().equals(userId)) throw new UnAuthorizedException();
+
+        if(!manitoGroup.isStartCurrentNumber()) throw new UserNumberFallShortException();
+        manitoGroup.changeStatus(ManitoStatus.ONGOING);
+        var members = manitoMappingRepository
+                .findAllByManitoGroup(ManitoGroup.builder().id(groupId).build());
+        shuffleMember(members);
+        createChat(members);
+    }
+
     private void shuffleMember(List<ManitoMapping> members){
         var count = members.size();
 
@@ -145,6 +176,12 @@ public class ManitoGroupService {
         for(var index = 0; index < count; index++){
             var manitoId = members.get((index + 1) % count).getUser().getId();
             members.get(index).setManitoId(manitoId);
+        }
+    }
+
+    private void createChat(List<ManitoMapping> members){
+        for(var member : members){
+            member.setChat(Chat.builder().build());
         }
     }
 
@@ -158,14 +195,23 @@ public class ManitoGroupService {
 
     // manito 맞췄는지 여부를 Back-End쪽에서 가지고 있을 필요가 있을까? ( 어드민 유저가 보고싶다면 ? )
     // 여기에 queryDSL 사용해보면 되겠는데
+    @Transactional
     public GroupMappingDTO getManitoResult(Long groupId, Long userId, String manitoName ) {
         return manitoMappingRepository.findGroupMapping(groupId, userId);
     }
 
-//    public List<ManitoMapping> getResults(Long groupId) {
-//        var manitoMappings = manitoMappingRepository.findAllByGroupId(groupId);
-//        manitoMappings.forEach(System.out::println);
-//        return manitoMappings;
-//    }
+    @Transactional
+    public List<ManitoMapping> getChatTargets(Long groupId, Long userId){
+        return manitoMappingRepository.findChatTargets(groupId, userId);
+    }
+
+    @Transactional
+    public List<Invite> getInviteDetail(Long groupId){
+        return inviteRepository.findAllByManitoGroup(
+                ManitoGroup.builder()
+                        .id(groupId)
+                        .build()
+        );
+    }
 
 }

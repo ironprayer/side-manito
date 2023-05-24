@@ -30,6 +30,14 @@ public class ManitoMapping {
     @Enumerated(EnumType.STRING)
     private ManitoResultStatus result;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "chatId")
+    private Chat chat;
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
+    }
+
     static public ManitoMapping mapping(Long groupId, User user){
         return ManitoMapping.builder()
                 .manitoGroup(ManitoGroup.builder()

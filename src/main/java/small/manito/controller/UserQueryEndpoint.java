@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import small.manito.auth.AuthPayload;
+import small.manito.controller.response.ChatTargetResponse;
 import small.manito.controller.response.UserResponse;
 import small.manito.querydsl.dto.GroupMappingDTO;
 import small.manito.service.ManitoGroupService;
@@ -48,7 +49,15 @@ public class UserQueryEndpoint {
         return manitoGroupService.getManitoResult(groupId, userId, manitoName);
     }
 
-    // 채팅 기록
-    @GetMapping("users/chat")
-    void getChat(){}
+    @GetMapping("users/chat-targets")
+    ChatTargetResponse getChatTargets(
+            @RequestParam(name = "groupId") Long groupId,
+            @AuthenticationPrincipal AuthPayload authPayload
+    ){
+        var userId = authPayload.getUserId();
+
+        return ChatTargetResponse
+                .from(manitoGroupService.getChatTargets(groupId, userId),
+                        userId);
+    }
 }

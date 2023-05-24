@@ -37,6 +37,14 @@ public class ManitoGroup {
         else return currentNumber.equals(maxNumber);
     }
 
+    public boolean isStartCurrentNumber(){
+        return currentNumber >= 4;
+    }
+
+    public boolean isCreateMaxNumber(){
+        return maxNumber >= 4;
+    }
+
     public void increaseCurrentNumber(){
         currentNumber = currentNumber + 1;
     }

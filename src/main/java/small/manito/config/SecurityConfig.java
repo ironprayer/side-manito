@@ -38,11 +38,11 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(
-                        (request) -> request.requestMatchers( "/", "/socket.io/", "/hello", "/users", "/hc", "/users/login", "/v3/**", "/swagger-ui/**" , "/app/**")
+                        (request) -> request.requestMatchers( "/", "/gs-guide-websocket/**", "/hello", "/users", "/hc", "/users/login", "/v3/**", "/swagger-ui/**" , "/app/**")
                                 .permitAll()
                                 .anyRequest()
-                                //.authenticated()
-                                .permitAll()
+                                .authenticated()
+//                                .permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

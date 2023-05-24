@@ -12,13 +12,16 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(DuplicationException.class)
     public ResponseEntity handleDuplicationException(DuplicationException e) {
-        System.out.println(e);
-        
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity handleAuthException(AuthException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @ExceptionHandler(InvalidException.class)
+    public ResponseEntity handleInvalidException(AuthException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 }

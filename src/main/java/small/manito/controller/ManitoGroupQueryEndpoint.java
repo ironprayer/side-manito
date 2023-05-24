@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import small.manito.auth.AuthPayload;
 import small.manito.controller.response.GroupResponse;
+import small.manito.controller.response.InviteDetailResponse;
 import small.manito.querydsl.dto.GroupDTO;
 import small.manito.service.ManitoGroupService;
 import small.manito.global.type.ManitoStatus;
@@ -31,18 +32,34 @@ public class ManitoGroupQueryEndpoint {
     }
 
     @GetMapping("/groups/{groupId}")
-    GroupResponse getGroup(@PathVariable(name = "groupId") Long id){
-        var findGroup = manitoGroupService.getGroup(id);
+    GroupResponse getGroup(
+            @PathVariable(name = "groupId") Long id,
+            @AuthenticationPrincipal AuthPayload authPayload){
+        var manitoMapping = manitoGroupService.getGroup(id);
+        var findGroup = manitoMapping.getManitoGroup();
         return GroupResponse.builder()
                 .id(findGroup.getId())
                 .name(findGroup.getName())
+                .ownerName(manitoMapping.getUser().getUserId())
                 .adminId(findGroup.getAdminId())
                 .startDate(findGroup.getStartDate())
-                .expireDate(findGroup.getExpiredDate())
+                .expiredDate(findGroup.getExpiredDate())
                 .currentNumber(findGroup.getCurrentNumber())
                 .maxNumber(findGroup.getMaxNumber())
                 .ownerId(findGroup.getOwnerId())
+                .status(findGroup.getStatus())
+                .isOwner(authPayload.getUserId().equals(findGroup.getOwnerId()))
                 .build();
+    }
+
+    @GetMapping("groups/invite-detail")
+    List<InviteDetailResponse> getInviteDetail(
+            @RequestParam(name = "groupId") Long groupId
+    ){
+        return manitoGroupService.getInviteDetail(groupId)
+                .stream()
+                .map(InviteDetailResponse::from)
+                .toList();
     }
 
 
