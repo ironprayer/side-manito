@@ -2,7 +2,7 @@ package small.manito.auth;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import small.manito.controller.response.TokenResponse;
+import small.manito.auth.controller.response.TokenResponse;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
