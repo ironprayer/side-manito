@@ -9,6 +9,7 @@ import small.manito.global.exception.InvalidUserException;
 import small.manito.global.exception.UnAuthorizedException;
 import small.manito.global.exception.UserNumberFallShortException;
 import small.manito.global.exception.UserNumberOverException;
+import small.manito.global.type.ManitoResultStatus;
 import small.manito.querydsl.dto.GroupDTO;
 import small.manito.querydsl.dto.GroupMappingDTO;
 import small.manito.querydsl.entity.*;
@@ -197,7 +198,14 @@ public class ManitoGroupService {
     // 여기에 queryDSL 사용해보면 되겠는데
     @Transactional
     public GroupMappingDTO getManitoResult(Long groupId, Long userId, String manitoName ) {
-        return manitoMappingRepository.findGroupMapping(groupId, userId);
+        var manitoMappingDTO = manitoMappingRepository.findGroupMapping(groupId, userId);
+        var status = manitoName.equals(manitoMappingDTO.getManitoName())
+                ? ManitoResultStatus.CORRECT
+                : ManitoResultStatus.INCORRECT;
+
+        manitoMappingDTO.changeStatus(status);
+
+        return manitoMappingDTO;
     }
 
     @Transactional

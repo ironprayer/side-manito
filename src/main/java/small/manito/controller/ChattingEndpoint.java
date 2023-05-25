@@ -20,12 +20,8 @@ public class ChattingEndpoint {
     public ChatResponse chatting(ChatRequest chatRequest,
                              @DestinationVariable String chatId) throws Exception {
 
-        chatService.saveChatLog(chatRequest.toChatLog(Long.valueOf(chatId)));
+        var chatLog = chatService.saveChatLog(chatRequest.toChatLog(Long.valueOf(chatId)));
 
-        return ChatResponse.builder()
-                .sendUserId(chatRequest.getSendUserId())
-                .message(chatRequest.getMessage())
-                .createdAt(chatRequest.getCreatedAt())
-                .build();
+        return ChatResponse.from(chatLog);
     }
 }

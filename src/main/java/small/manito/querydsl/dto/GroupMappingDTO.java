@@ -1,10 +1,13 @@
 package small.manito.querydsl.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.Getter;
 import lombok.ToString;
 import small.manito.global.type.ManitoResultStatus;
+import small.manito.global.type.ManitoStatus;
 
 @ToString
+@Getter
 public class GroupMappingDTO {
     private Long userId;
     private Long manitoId;
@@ -17,5 +20,9 @@ public class GroupMappingDTO {
         this.manitoId = manitoId;
         this.manitoName = manitoName;
         this.manitoResultStatus = manitoResultStatus;
+    }
+
+    public void changeStatus(ManitoResultStatus status) {
+        this.manitoResultStatus = status;
     }
 }

@@ -14,8 +14,8 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final ChatLogRepository chatLogRepository;
 
-    public void saveChatLog(ChatLog chatLog){
-        chatLogRepository.save(chatLog);
+    public ChatLog saveChatLog(ChatLog chatLog){
+        return chatLogRepository.save(chatLog);
     }
 
     public List<ChatLog> getAllChatInRoom(Long chatId){
