@@ -41,10 +41,10 @@ public class UserQueryEndpoint {
     @GetMapping("users/predict")
     GroupMappingDTO predictManito(
             @RequestParam(name = "groupId") Long groupId,
-            @RequestParam(name = "manitoName") String manitoName,
+            @RequestParam(name = "maniteeName") String maniteeName,
             @AuthenticationPrincipal AuthPayload authPayload
     ){
-        return manitoGroupService.getManitoResult(groupId, authPayload.getUserId(), manitoName);
+        return manitoGroupService.getManitoResult(groupId, authPayload.getUserId(), maniteeName);
     }
 
     @GetMapping("users/chat-targets")

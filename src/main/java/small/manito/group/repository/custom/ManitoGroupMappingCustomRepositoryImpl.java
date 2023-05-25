@@ -23,14 +23,14 @@ public class ManitoGroupMappingCustomRepositoryImpl implements ManitoGroupMappin
     public GroupMappingDTO findGroupMapping(Long groupId, Long userId) {
         return queryFactory
                 .select(new QGroupMappingDTO(
-                        manitoMapping.user.id,
                         manitoMapping.manito.id,
-                        manitoMapping.manito.name,
+                        manitoMapping.user.id,
+                        manitoMapping.user.name,
                         manitoMapping.result)
                 )
                 .from(manitoMapping)
                 .where(manitoMapping.manitoGroup.id.eq(groupId))
-                .where(manitoMapping.user.id.eq(userId))
+                .where(manitoMapping.manito.id.eq(userId))
                 .fetchOne();
     }
 

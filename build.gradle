@@ -62,8 +62,8 @@ tasks.named('test') {
 }
 
 // === Querydsl 빌드 옵션 (선택사항) ===
-def querydslDir = "$buildDir/generated/querydsl"
-
+//def querydslDir = "$buildDir/generated/querydsl"
+//
 //querydsl {
 //	jpa = true
 //	querydslSourcesDir = querydslDir

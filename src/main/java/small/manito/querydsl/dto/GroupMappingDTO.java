@@ -10,15 +10,15 @@ import small.manito.global.type.ManitoStatus;
 @Getter
 public class GroupMappingDTO {
     private Long userId;
-    private Long manitoId;
-    private String manitoName;
+    private Long maniteeId;
+    private String maniteeName;
     private ManitoResultStatus manitoResultStatus;
 
     @QueryProjection
-    public GroupMappingDTO(Long userId, Long manitoId, String manitoName, ManitoResultStatus manitoResultStatus) {
+    public GroupMappingDTO(Long userId, Long maniteeId, String manitoName, ManitoResultStatus manitoResultStatus) {
         this.userId = userId;
-        this.manitoId = manitoId;
-        this.manitoName = manitoName;
+        this.maniteeId = maniteeId;
+        this.maniteeName = maniteeName;
         this.manitoResultStatus = manitoResultStatus;
     }
 

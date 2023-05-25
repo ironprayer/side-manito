@@ -196,9 +196,9 @@ public class ManitoGroupService {
     // manito 맞췄는지 여부를 Back-End쪽에서 가지고 있을 필요가 있을까? ( 어드민 유저가 보고싶다면 ? )
     // 여기에 queryDSL 사용해보면 되겠는데
     @Transactional
-    public GroupMappingDTO getManitoResult(Long groupId, Long userId, String manitoName ) {
+    public GroupMappingDTO getManitoResult(Long groupId, Long userId, String maniteeName ) {
         var manitoMappingDTO = manitoMappingRepository.findGroupMapping(groupId, userId);
-        var status = manitoName.equals(manitoMappingDTO.getManitoName())
+        var status = maniteeName.equals(manitoMappingDTO.getManiteeName())
                 ? ManitoResultStatus.CORRECT
                 : ManitoResultStatus.INCORRECT;
 
