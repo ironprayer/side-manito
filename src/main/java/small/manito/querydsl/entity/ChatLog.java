@@ -1,10 +1,9 @@
 package small.manito.querydsl.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,5 +20,8 @@ public class ChatLog {
     Long chatId;
     Long sendId;
     String message;
+
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     LocalDateTime createdAt;
 }

@@ -19,7 +19,6 @@ public class ChattingEndpoint {
     @SendTo("/topic/chat/{chatId}")
     public ChatResponse chatting(ChatRequest chatRequest,
                              @DestinationVariable String chatId) throws Exception {
-
         var chatLog = chatService.saveChatLog(chatRequest.toChatLog(Long.valueOf(chatId)));
 
         return ChatResponse.from(chatLog);

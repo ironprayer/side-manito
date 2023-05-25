@@ -17,7 +17,6 @@ public class UserQueryEndpoint {
     private final ManitoGroupService manitoGroupService;
     // 궁금증 컨트롤러가 다른데 도메인 시작이 같아도 될까??
 
-
     @GetMapping("users")
     UserResponse getUser(
             @RequestParam("id") Long id
@@ -43,10 +42,10 @@ public class UserQueryEndpoint {
     @GetMapping("users/predict")
     GroupMappingDTO predictManito(
             @RequestParam(name = "groupId") Long groupId,
-            @RequestParam(name = "userId") Long userId,
-            @RequestParam(name = "manitoName") String manitoName
+            @RequestParam(name = "manitoName") String manitoName,
+            @AuthenticationPrincipal AuthPayload authPayload
     ){
-        return manitoGroupService.getManitoResult(groupId, userId, manitoName);
+        return manitoGroupService.getManitoResult(groupId, authPayload.getUserId(), manitoName);
     }
 
     @GetMapping("users/chat-targets")
