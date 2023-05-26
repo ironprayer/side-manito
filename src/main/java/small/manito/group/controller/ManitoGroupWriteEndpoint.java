@@ -11,13 +11,14 @@ import small.manito.group.controller.request.InviteAnswerRequest;
 import small.manito.group.controller.request.InviteUserRequest;
 import small.manito.group.controller.request.ManitoGroupRequest;
 import small.manito.group.controller.request.StartGroupRequest;
-import small.manito.group.service.ManitoGroupService;
+import small.manito.group.service.ManitoGroupQueryService;
 import small.manito.global.type.InviteAnswer;
+import small.manito.group.service.ManitoGroupWriteService;
 
 @RestController
 @RequiredArgsConstructor
 public class ManitoGroupWriteEndpoint {
-    private final ManitoGroupService manitoGroupService;
+    private final ManitoGroupWriteService manitoGroupWriteService;
 
     /* ( 사용자 정의 자료형 만들 필요가 있겠군 )
         - 마니또 그룹을 만들 때 아래 사항을 지정할 수 있다.
@@ -29,7 +30,7 @@ public class ManitoGroupWriteEndpoint {
     void createManitoGroup(@RequestBody ManitoGroupRequest manitoGroupRequest,
                            @AuthenticationPrincipal AuthPayload authPayload){
         var userId = authPayload.getUserId();
-        manitoGroupService.create(manitoGroupRequest.toManito(userId), userId);
+        manitoGroupWriteService.create(manitoGroupRequest.toManito(userId), userId);
     }
 
     @PostMapping("/groups/invite")
@@ -39,7 +40,7 @@ public class ManitoGroupWriteEndpoint {
            1. 자신한테 초대 안되게하기
            2. PENDING 유저에게는 초대 못 보내게 하기.
          */
-        manitoGroupService.inviteUser(inviteUserRequest.getGroupId(), authPayload.getUserId(), inviteUserRequest.getGuestId());
+        manitoGroupWriteService.inviteUser(inviteUserRequest.getGroupId(), authPayload.getUserId(), inviteUserRequest.getGuestId());
     }
 
     /*
@@ -53,7 +54,7 @@ public class ManitoGroupWriteEndpoint {
             @RequestBody InviteAnswerRequest inviteAnswerRequest,
             @AuthenticationPrincipal AuthPayload authPayload){
 
-        manitoGroupService.answerInvited(InviteAnswer
+        manitoGroupWriteService.answerInvited(InviteAnswer
                 .builder()
                 .groupId(inviteAnswerRequest.getGroupId())
                 .userId(authPayload.getUserId())
@@ -70,7 +71,7 @@ public class ManitoGroupWriteEndpoint {
             @RequestBody StartGroupRequest startGroupRequest,
             @AuthenticationPrincipal AuthPayload authPayload
     ){
-        manitoGroupService.start(startGroupRequest.getGroupId(), authPayload.getUserId());
+        manitoGroupWriteService.start(startGroupRequest.getGroupId(), authPayload.getUserId());
 //        manitoGroupService.matchingManito(manitoGroupRequest.getGroupId());
     }
 }

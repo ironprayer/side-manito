@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.*;
 import small.manito.auth.controller.request.LoginRequest;
 import small.manito.auth.controller.response.TokenResponse;
 import small.manito.auth.service.AuthService;
-import small.manito.group.service.ManitoGroupService;
+import small.manito.group.service.ManitoGroupQueryService;
 
 @RestController
 @RequiredArgsConstructor
 public class UserWriteEndpoint {
-    private final ManitoGroupService manitoGroupService;
+    private final ManitoGroupQueryService manitoGroupQueryService;
     private final AuthService authService;
 
     // 회원가입

@@ -7,13 +7,13 @@ import small.manito.auth.AuthPayload;
 import small.manito.user.controller.response.ChatTargetResponse;
 import small.manito.user.controller.response.UserResponse;
 import small.manito.querydsl.dto.GroupMappingDTO;
-import small.manito.group.service.ManitoGroupService;
+import small.manito.group.service.ManitoGroupQueryService;
 
 @RestController
 @RequiredArgsConstructor
 public class UserQueryEndpoint {
 
-    private final ManitoGroupService manitoGroupService;
+    private final ManitoGroupQueryService manitoGroupQueryService;
     // 궁금증 컨트롤러가 다른데 도메인 시작이 같아도 될까??
 
     @GetMapping("users")
@@ -21,7 +21,7 @@ public class UserQueryEndpoint {
             @RequestParam("id") Long id
     ){
         return UserResponse.builder()
-                .id(manitoGroupService.getUser(id).getUserId())
+                .id(manitoGroupQueryService.getUser(id).getUserId())
                 .build();
     }
 
@@ -30,7 +30,7 @@ public class UserQueryEndpoint {
             @AuthenticationPrincipal AuthPayload authPayload
             ){
         return UserResponse.builder()
-                .id(manitoGroupService.getUser(authPayload.getUserId()).getUserId())
+                .id(manitoGroupQueryService.getUser(authPayload.getUserId()).getUserId())
                 .build();
     }
 
@@ -44,7 +44,7 @@ public class UserQueryEndpoint {
             @RequestParam(name = "maniteeName") String maniteeName,
             @AuthenticationPrincipal AuthPayload authPayload
     ){
-        return manitoGroupService.getManitoResult(groupId, authPayload.getUserId(), maniteeName);
+        return manitoGroupQueryService.getManitoResult(groupId, authPayload.getUserId(), maniteeName);
     }
 
     @GetMapping("users/chat-targets")
@@ -55,7 +55,7 @@ public class UserQueryEndpoint {
         var userId = authPayload.getUserId();
 
         return ChatTargetResponse
-                .from(manitoGroupService.getChatTargets(groupId, userId),
+                .from(manitoGroupQueryService.getChatTargets(groupId, userId),
                         userId);
     }
 }

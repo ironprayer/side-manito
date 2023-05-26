@@ -8,7 +8,7 @@ import small.manito.auth.AuthPayload;
 import small.manito.group.controller.response.GroupResponse;
 import small.manito.group.controller.response.InviteDetailResponse;
 import small.manito.querydsl.dto.GroupDTO;
-import small.manito.group.service.ManitoGroupService;
+import small.manito.group.service.ManitoGroupQueryService;
 import small.manito.global.type.ManitoStatus;
 
 import java.util.List;
@@ -17,24 +17,24 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "마니또", description = "마니또 API")
 public class ManitoGroupQueryEndpoint {
-    private final ManitoGroupService manitoGroupService;
+    private final ManitoGroupQueryService manitoGroupQueryService;
 
     @GetMapping("/groups")
     List<GroupDTO> getGroups(@RequestParam(name="status") ManitoStatus status,
                              @AuthenticationPrincipal AuthPayload authPayload){
-        return manitoGroupService.getManitoGroupWithStatus(authPayload.getUserId(), status);
+        return manitoGroupQueryService.getManitoGroupWithStatus(authPayload.getUserId(), status);
     }
 
     @GetMapping("/groups/invited")
     List<GroupDTO> getGroupsInvited(@AuthenticationPrincipal AuthPayload authPayload){
-        return manitoGroupService.getManitoGroupInvited(authPayload.getUserId());
+        return manitoGroupQueryService.getManitoGroupInvited(authPayload.getUserId());
     }
 
     @GetMapping("/groups/{groupId}")
     GroupResponse getGroup(
             @PathVariable(name = "groupId") Long id,
             @AuthenticationPrincipal AuthPayload authPayload){
-        var manitoMapping = manitoGroupService.getGroup(id);
+        var manitoMapping = manitoGroupQueryService.getGroup(id);
         var findGroup = manitoMapping.getManitoGroup();
         return GroupResponse.builder()
                 .id(findGroup.getId())
@@ -55,7 +55,7 @@ public class ManitoGroupQueryEndpoint {
     List<InviteDetailResponse> getInviteDetail(
             @RequestParam(name = "groupId") Long groupId
     ){
-        return manitoGroupService.getInviteDetail(groupId)
+        return manitoGroupQueryService.getInviteDetail(groupId)
                 .stream()
                 .map(InviteDetailResponse::from)
                 .toList();
