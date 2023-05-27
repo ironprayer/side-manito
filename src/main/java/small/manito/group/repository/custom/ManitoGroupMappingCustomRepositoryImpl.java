@@ -19,20 +19,20 @@ public class ManitoGroupMappingCustomRepositoryImpl implements ManitoGroupMappin
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    @Override
-    public GroupMappingDTO findGroupMapping(Long groupId, Long userId) {
-        return queryFactory
-                .select(new QGroupMappingDTO(
-                        manitoMapping.manito.id,
-                        manitoMapping.user.id,
-                        manitoMapping.user.name,
-                        manitoMapping.result)
-                )
-                .from(manitoMapping)
-                .where(manitoMapping.manitoGroup.id.eq(groupId))
-                .where(manitoMapping.manito.id.eq(userId))
-                .fetchOne();
-    }
+//    @Override
+//    public GroupMappingDTO findGroupMapping(Long groupId, Long userId) {
+//        return queryFactory
+//                .select(new QGroupMappingDTO(
+//                        manitoMapping.manito.id,
+//                        manitoMapping.user.id,
+//                        manitoMapping.user.userId,
+//                        manitoMapping.result)
+//                )
+//                .from(manitoMapping)
+//                .where(manitoMapping.manitoGroup.id.eq(groupId))
+//                .where(manitoMapping.manito.id.eq(userId))
+//                .fetchOne();
+//    }
 
     @Override
     public List<GroupDTO> findGroupsWithUserIdAndStatus(Long userId, ManitoStatus status) {

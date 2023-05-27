@@ -25,7 +25,7 @@ public class ChatTargetResponse {
         for(var manitoMapping : manitoMappings){
             if(manitoMapping.getUser().getId().equals(userId)){
                 manitoChatId = manitoMapping.getChat().getId();
-                manitoName = manitoMapping.getManito().getName();
+                manitoName = manitoMapping.getManito().getUserId();
             } else {
                 maniteeChatId = manitoMapping.getChat().getId();
             }

@@ -5,6 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import small.manito.auth.AuthPayload;
 import small.manito.user.controller.response.ChatTargetResponse;
+import small.manito.user.controller.response.PredictResponse;
 import small.manito.user.controller.response.UserResponse;
 import small.manito.querydsl.dto.GroupMappingDTO;
 import small.manito.group.service.ManitoGroupQueryService;
@@ -39,12 +40,11 @@ public class UserQueryEndpoint {
     - 완료 상태가 되면 참여자들은 자신의 예상 마니또를 제출하고 실제 마니또가 누구인지 알 수 있다.
     */
     @GetMapping("users/predict")
-    GroupMappingDTO predictManito(
+    PredictResponse predictManito(
             @RequestParam(name = "groupId") Long groupId,
-            @RequestParam(name = "maniteeName") String maniteeName,
             @AuthenticationPrincipal AuthPayload authPayload
     ){
-        return manitoGroupQueryService.getManitoResult(groupId, authPayload.getUserId(), maniteeName);
+        return PredictResponse.from(manitoGroupQueryService.getManitoResult(groupId, authPayload.getUserId()));
     }
 
     @GetMapping("users/chat-targets")

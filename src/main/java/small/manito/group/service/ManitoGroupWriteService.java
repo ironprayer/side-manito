@@ -10,10 +10,12 @@ import small.manito.global.exception.UserNumberFallShortException;
 import small.manito.global.exception.UserNumberOverException;
 import small.manito.global.type.InviteAnswer;
 import small.manito.global.type.InviteAnswerStatus;
+import small.manito.global.type.ManitoResultStatus;
 import small.manito.global.type.ManitoStatus;
 import small.manito.group.repository.InviteRepository;
 import small.manito.group.repository.ManitoGroupRepository;
 import small.manito.group.repository.ManitoMappingRepository;
+import small.manito.querydsl.dto.GroupMappingDTO;
 import small.manito.querydsl.entity.*;
 import small.manito.user.repository.UserRepository;
 
@@ -127,11 +129,15 @@ public class ManitoGroupWriteService {
         if(!manitoGroup.getOwnerId().equals(userId)) throw new UnAuthorizedException();
 
         if(!manitoGroup.isStartCurrentNumber()) throw new UserNumberFallShortException();
+
         manitoGroup.changeStatus(ManitoStatus.ONGOING);
+
         var members = manitoMappingRepository
                 .findAllByManitoGroup(ManitoGroup.builder().id(groupId).build());
+
         shuffleMember(members);
         createChat(members);
+        initResultStatus(members);
     }
 
     private void shuffleMember(List<ManitoMapping> members){
@@ -148,5 +154,23 @@ public class ManitoGroupWriteService {
         for(var member : members){
             member.setChat(Chat.builder().build());
         }
+    }
+
+    private void initResultStatus(List<ManitoMapping> members){
+        for(var member : members){
+            member.setResultStatus(ManitoResultStatus.NOTSUBMIT);
+        }
+    }
+
+    @Transactional
+    public ManitoMapping getManitoResult(Long groupId, Long userId, String maniteeName ) {
+        var manitoMapping = manitoMappingRepository.findResultManitoMapping(groupId, userId).get();
+        var status = maniteeName.equals(manitoMapping.getUser().getUserId())
+                ? ManitoResultStatus.CORRECT
+                : ManitoResultStatus.INCORRECT;
+
+        manitoMapping.setResultStatus(status);
+
+        return manitoMapping;
     }
 }

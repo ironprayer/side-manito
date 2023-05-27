@@ -9,6 +9,7 @@ import small.manito.group.repository.custom.ManitoGroupMappingCustomRepository;
 import small.manito.querydsl.entity.ManitoMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ManitoMappingRepository extends JpaRepository<ManitoMapping, Long>, ManitoGroupMappingCustomRepository {
@@ -17,4 +18,7 @@ public interface ManitoMappingRepository extends JpaRepository<ManitoMapping, Lo
 
     @Query("select m from ManitoMapping m where m.manitoGroup.id = :groupId and (m.user.id = :userId or m.manito.id = :userId)")
     List<ManitoMapping> findChatTargets(@Param("groupId") Long groupId, @Param("userId") Long userId);
+
+    @Query("select m from ManitoMapping m where m.manitoGroup.id = :groupId and m.manito.id = :userId")
+    Optional<ManitoMapping> findResultManitoMapping(@Param("groupId") Long groupId, @Param("userId") Long userId);
 }

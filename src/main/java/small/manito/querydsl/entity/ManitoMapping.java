@@ -34,10 +34,6 @@ public class ManitoMapping {
     @JoinColumn(name = "chatId")
     private Chat chat;
 
-    public void setChat(Chat chat) {
-        this.chat = chat;
-    }
-
     static public ManitoMapping mapping(Long groupId, User user){
         return ManitoMapping.builder()
                 .manitoGroup(ManitoGroup.builder()
@@ -47,9 +43,17 @@ public class ManitoMapping {
                 .build();
     }
 
+    public void setChat(Chat chat) {
+        this.chat = chat;
+    }
+
     public void setManitoId(Long manitoId){
         this.manito = User.builder()
                 .id(manitoId)
                 .build();
+    }
+
+    public void setResultStatus(ManitoResultStatus manitoResultStatus){
+        this.result = manitoResultStatus;
     }
 }
