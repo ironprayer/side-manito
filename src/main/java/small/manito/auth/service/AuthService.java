@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import small.manito.auth.JwtTokenProvider;
 import small.manito.auth.controller.response.TokenResponse;
 import small.manito.global.exception.UnAuthorizedException;
@@ -43,5 +44,9 @@ public class AuthService {
         TokenResponse tokenInfo = JwtTokenProvider.generateToken(user.getId());
 
         return tokenInfo;
+    }
+
+    public boolean hasTextUser(String userId, String password){
+        return StringUtils.hasText(userId) && StringUtils.hasText(password);
     }
 }

@@ -20,12 +20,6 @@ import small.manito.group.service.ManitoGroupWriteService;
 public class ManitoGroupWriteEndpoint {
     private final ManitoGroupWriteService manitoGroupWriteService;
 
-    /* ( 사용자 정의 자료형 만들 필요가 있겠군 )
-        - 마니또 그룹을 만들 때 아래 사항을 지정할 수 있다.
-        - 몇명이서 하는지
-        - 마니또 기간
-        - 마니또 그룹을 만들면 마니또 그룹 아이디랑 어드민 아이디를 발급한다.
-     */
     @PostMapping("/groups")
     void createManitoGroup(@RequestBody ManitoGroupRequest manitoGroupRequest,
                            @AuthenticationPrincipal AuthPayload authPayload){
@@ -36,18 +30,9 @@ public class ManitoGroupWriteEndpoint {
     @PostMapping("/groups/invite")
     void inviteManitoGroup(@RequestBody InviteUserRequest inviteUserRequest,
                            @AuthenticationPrincipal AuthPayload authPayload){
-        /* TODO 수정 필요
-           1. 자신한테 초대 안되게하기
-           2. PENDING 유저에게는 초대 못 보내게 하기.
-         */
         manitoGroupWriteService.inviteUser(inviteUserRequest.getGroupId(), authPayload.getUserId(), inviteUserRequest.getGuestId());
     }
 
-    /*
- - 마니또 그룹 아이디가 있고 그룹 아이디를 통해 참여자 등록을 할 수 있다.
- - 참여자 등록 시에는 실제 이름과 닉네임을 필수로 받는다.
-
-  */
     //@Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("/groups/invite/answer")
     void answerGroup(

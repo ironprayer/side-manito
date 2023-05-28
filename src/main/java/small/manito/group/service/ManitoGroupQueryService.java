@@ -52,11 +52,6 @@ public class ManitoGroupQueryService {
         return manitoMappingRepository.findGroupsWithUserIdAndStatus(userId, status);
     }
 
-    @Transactional
-    public User getUser(Long userId){
-        return userRepository.findById(userId).get();
-    }
-
     public List<GroupDTO> getManitoGroupInvited(Long userId){
         return inviteRepository
                 .findGroupsInGuestId(userId).stream().map((invite -> {
@@ -65,24 +60,10 @@ public class ManitoGroupQueryService {
                 .toList();
     }
 
-    // 별도로 빠져있는 것이 좋다 -> package 하나 만들자
     @Scheduled(fixedDelay = 1000 * 60)
     @Transactional
     public void end(){
         manitoGroupRepository.endOfAllMantioGroup();
-        // flush가 자동으로 되었던가? 아니면 flush를 시켜줘야 했던가? 해야한다면 방법은?
-    }
-
-    // manito 맞췄는지 여부를 Back-End쪽에서 가지고 있을 필요가 있을까? ( 어드민 유저가 보고싶다면 ? )
-    // 여기에 queryDSL 사용해보면 되겠는데
-    @Transactional
-    public ManitoMapping getManitoResult(Long groupId, Long userId) {
-        return manitoMappingRepository.findResultManitoMapping(groupId, userId).get();
-    }
-
-    @Transactional
-    public List<ManitoMapping> getChatTargets(Long groupId, Long userId){
-        return manitoMappingRepository.findChatTargets(groupId, userId);
     }
 
     @Transactional

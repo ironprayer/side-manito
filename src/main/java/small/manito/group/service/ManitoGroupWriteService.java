@@ -104,9 +104,11 @@ public class ManitoGroupWriteService {
 
         if(manitoGroup.isFull()) throw new UserNumberOverException();
         if(hostId.equals(guest.getId())) throw new InvalidUserException();
+
         var invite = inviteRepository
                 .findByManitoGroupAndGuest(manitoGroup,guest)
                 .orElseGet(() -> null);
+
         if(!manitoGroup.isFull() && invite == null) {
             inviteRepository.save(
                     Invite.builder()
@@ -160,17 +162,5 @@ public class ManitoGroupWriteService {
         for(var member : members){
             member.setResultStatus(ManitoResultStatus.NOTSUBMIT);
         }
-    }
-
-    @Transactional
-    public ManitoMapping getManitoResult(Long groupId, Long userId, String maniteeName ) {
-        var manitoMapping = manitoMappingRepository.findResultManitoMapping(groupId, userId).get();
-        var status = maniteeName.equals(manitoMapping.getUser().getUserId())
-                ? ManitoResultStatus.CORRECT
-                : ManitoResultStatus.INCORRECT;
-
-        manitoMapping.setResultStatus(status);
-
-        return manitoMapping;
     }
 }
