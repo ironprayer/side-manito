@@ -24,25 +24,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
-            // Access-Control-Allow-Origin
-            String origin = request.getHeader("Origin");
-            response.setHeader("Access-Control-Allow-Origin", allowedOrigins.contains(origin) ? origin : "");
-            response.setHeader("Vary", "Origin");
-
-            // Access-Control-Max-Age
-            response.setHeader("Access-Control-Max-Age", "3600");
-
-            // Access-Control-Allow-Credentials
-            response.setHeader("Access-Control-Allow-Credentials", "true");
-
-            // Access-Control-Allow-Methods
-            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-
-            // Access-Control-Allow-Headers
-            response.setHeader("Access-Control-Allow-Headers",
-                    "Origin, X-Requested-With, Content-Type, Accept, " + "X-CSRF-TOKEN");
-        }
+//        if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
+//            // Access-Control-Allow-Origin
+//            String origin = request.getHeader("Origin");
+//            response.setHeader("Access-Control-Allow-Origin", allowedOrigins.contains(origin) ? origin : "");
+//            response.setHeader("Vary", "Origin");
+//
+//            // Access-Control-Max-Age
+//            response.setHeader("Access-Control-Max-Age", "3600");
+//
+//            // Access-Control-Allow-Credentials
+//            response.setHeader("Access-Control-Allow-Credentials", "true");
+//
+//            // Access-Control-Allow-Methods
+//            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+//
+//            // Access-Control-Allow-Headers
+//            response.setHeader("Access-Control-Allow-Headers",
+//                    "Origin, X-Requested-With, Content-Type, Accept, " + "X-CSRF-TOKEN");
+//        }
 
         try {
             var jwt = getJwtFromRequest(request);

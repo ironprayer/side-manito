@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import small.manito.auth.JwtAuthenticationFilter;
 import small.manito.auth.JwtTokenProvider;
+import small.manito.auth.SocketOriginFilter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +46,8 @@ public class SecurityConfig {
 //                                .permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
-                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new SocketOriginFilter(), JwtAuthenticationFilter.class);
 
         return http.build();
     }

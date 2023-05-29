@@ -2,16 +2,9 @@ package small.manito.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -19,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class SocketOriginFilter extends OncePerRequestFilter {
     private final List<String> allowedOrigins = Arrays.asList("http://localhost:3000", "http://172.20.10.2:3000");
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -43,35 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.setHeader("Access-Control-Allow-Headers",
                     "Origin, X-Requested-With, Content-Type, Accept, " + "X-CSRF-TOKEN");
         }
-
-        try {
-            var jwt = getJwtFromRequest(request);
-            if (StringUtils.hasText(jwt) && JwtTokenProvider.validateToken(jwt)) {
-                var userId = JwtTokenProvider.parseUserId(jwt);
-                var authentication = new UserAuthentication(userId);
-
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else {
-                if (!StringUtils.hasText(jwt)) {
-                    request.setAttribute("unauthorization", "401 인증키 없음.");
-                }else if (JwtTokenProvider.validateToken(jwt)) {
-                    request.setAttribute("unauthorization", "401-001 인증키 만료.");
-                }
-            }
-        } catch (Exception ex) {
-            System.out.println("Could not set user authentication in security context");
-        }
-
         filterChain.doFilter(request, response);
-    }
-
-    private String getJwtFromRequest(HttpServletRequest request) {
-        var bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring("Bearer ".length());
-        }
-        return null;
     }
 }
