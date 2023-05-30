@@ -60,12 +60,6 @@ public class ManitoGroupQueryService {
                 .toList();
     }
 
-    @Scheduled(fixedDelay = 1000 * 60)
-    @Transactional
-    public void end(){
-        manitoGroupRepository.endOfAllMantioGroup();
-    }
-
     @Transactional
     public List<Invite> getInviteDetail(Long groupId){
         return inviteRepository.findAllByManitoGroup(
