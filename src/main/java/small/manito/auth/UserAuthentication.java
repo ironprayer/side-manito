@@ -1,6 +1,5 @@
 package small.manito.auth;
 
-import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class UserAuthentication extends AbstractAuthenticationToken {

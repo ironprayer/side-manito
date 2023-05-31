@@ -2,15 +2,14 @@ package small.manito.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import small.manito.auth.AuthPayload;
 import small.manito.auth.controller.request.LoginRequest;
 import small.manito.auth.controller.response.TokenResponse;
 import small.manito.auth.service.AuthService;
 import small.manito.global.exception.InvalidUserException;
-import small.manito.group.service.ManitoGroupQueryService;
-import small.manito.group.service.ManitoGroupWriteService;
-import small.manito.querydsl.dto.GroupMappingDTO;
 import small.manito.user.controller.request.PredictRequest;
 import small.manito.user.controller.response.PredictResponse;
 import small.manito.user.service.UserWriteService;

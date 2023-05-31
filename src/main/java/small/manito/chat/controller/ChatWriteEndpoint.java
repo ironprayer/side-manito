@@ -11,7 +11,7 @@ import small.manito.chat.service.ChatService;
 
 @Controller
 @RequiredArgsConstructor
-public class ChattingEndpoint {
+public class ChatWriteEndpoint {
     private final ChatService chatService;
 
     @MessageMapping("/chat/{chatId}")

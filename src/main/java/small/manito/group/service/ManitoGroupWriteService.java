@@ -15,7 +15,6 @@ import small.manito.global.type.ManitoStatus;
 import small.manito.group.repository.InviteRepository;
 import small.manito.group.repository.ManitoGroupRepository;
 import small.manito.group.repository.ManitoMappingRepository;
-import small.manito.querydsl.dto.GroupMappingDTO;
 import small.manito.querydsl.entity.*;
 import small.manito.user.repository.UserRepository;
 

@@ -21,6 +21,4 @@ public class ChatService {
     public List<ChatLog> getAllChatInRoom(Long chatId){
         return chatLogRepository.findAllByChatId(chatId);
     }
-
-    List<String> allChatUser(){return null;}
 }

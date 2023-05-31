@@ -2,24 +2,17 @@ package small.manito.group.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import small.manito.global.exception.InvalidUserException;
-import small.manito.global.exception.UnAuthorizedException;
-import small.manito.global.exception.UserNumberFallShortException;
-import small.manito.global.exception.UserNumberOverException;
-import small.manito.global.type.ManitoResultStatus;
-import small.manito.querydsl.dto.GroupDTO;
-import small.manito.querydsl.dto.GroupMappingDTO;
-import small.manito.querydsl.entity.*;
+import small.manito.global.type.ManitoStatus;
 import small.manito.group.repository.InviteRepository;
 import small.manito.group.repository.ManitoGroupRepository;
 import small.manito.group.repository.ManitoMappingRepository;
+import small.manito.querydsl.dto.GroupDTO;
+import small.manito.querydsl.entity.Invite;
+import small.manito.querydsl.entity.ManitoGroup;
+import small.manito.querydsl.entity.ManitoMapping;
 import small.manito.user.repository.UserRepository;
-import small.manito.global.type.InviteAnswer;
-import small.manito.global.type.InviteAnswerStatus;
-import small.manito.global.type.ManitoStatus;
 
 import java.util.List;
 

@@ -2,11 +2,9 @@ package small.manito.group.repository.custom;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import small.manito.querydsl.dto.GroupDTO;
-import small.manito.querydsl.dto.GroupMappingDTO;
-import small.manito.querydsl.dto.QGroupDTO;
-import small.manito.querydsl.dto.QGroupMappingDTO;
 import small.manito.global.type.ManitoStatus;
+import small.manito.querydsl.dto.GroupDTO;
+import small.manito.querydsl.dto.QGroupDTO;
 
 import java.util.List;
 
@@ -18,22 +16,6 @@ public class ManitoGroupMappingCustomRepositoryImpl implements ManitoGroupMappin
     public ManitoGroupMappingCustomRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
-
-//    @Override
-//    public GroupMappingDTO findGroupMapping(Long groupId, Long userId) {
-//        return queryFactory
-//                .select(new QGroupMappingDTO(
-//                        manitoMapping.manito.id,
-//                        manitoMapping.user.id,
-//                        manitoMapping.user.userId,
-//                        manitoMapping.result)
-//                )
-//                .from(manitoMapping)
-//                .where(manitoMapping.manitoGroup.id.eq(groupId))
-//                .where(manitoMapping.manito.id.eq(userId))
-//                .fetchOne();
-//    }
-
     @Override
     public List<GroupDTO> findGroupsWithUserIdAndStatus(Long userId, ManitoStatus status) {
         return queryFactory.from(manitoMapping)

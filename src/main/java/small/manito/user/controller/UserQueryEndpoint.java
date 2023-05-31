@@ -2,15 +2,14 @@ package small.manito.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import small.manito.auth.AuthPayload;
 import small.manito.user.controller.response.ChatTargetResponse;
 import small.manito.user.controller.response.PredictResponse;
 import small.manito.user.controller.response.UserResponse;
-import small.manito.querydsl.dto.GroupMappingDTO;
-import small.manito.group.service.ManitoGroupQueryService;
 import small.manito.user.service.UserQueryService;
-import small.manito.user.service.UserWriteService;
 
 @RestController
 @RequiredArgsConstructor

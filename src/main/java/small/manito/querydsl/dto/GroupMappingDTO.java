@@ -4,7 +4,6 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.ToString;
 import small.manito.global.type.ManitoResultStatus;
-import small.manito.global.type.ManitoStatus;
 
 @ToString
 @Getter

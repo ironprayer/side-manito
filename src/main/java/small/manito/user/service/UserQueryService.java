@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import small.manito.group.repository.ManitoMappingRepository;
-import small.manito.querydsl.dto.GroupDTO;
 import small.manito.querydsl.entity.ManitoMapping;
 import small.manito.querydsl.entity.User;
 import small.manito.user.repository.UserRepository;

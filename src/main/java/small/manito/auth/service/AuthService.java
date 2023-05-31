@@ -40,7 +40,6 @@ public class AuthService {
             throw new UnAuthorizedException();
         }
 
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenResponse tokenInfo = JwtTokenProvider.generateToken(user.getId());
 
         return tokenInfo;

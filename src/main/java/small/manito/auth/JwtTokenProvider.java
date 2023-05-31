@@ -17,8 +17,6 @@ public class JwtTokenProvider {
     private static final int ACCESS_TOKEN_DURATION_SECONDS = 60 * 30;
     private static final int REFRESH_TOKEN_DURATION_SECONDS = 60 * 60 * 24 * 7;
 
-
-    // 유저 정보를 가지고 AccessToken, RefreshToken 을 생성하는 메서드
     public static TokenResponse generateToken(Long userId) {
         var now = Instant.now();
         var expiryDateOfAccessToken = now.plusSeconds(ACCESS_TOKEN_DURATION_SECONDS);
@@ -34,7 +32,6 @@ public class JwtTokenProvider {
                 .signWith(SIGNING_KEY, SignatureAlgorithm.HS256)
                 .compact();
 
-        // Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setClaims(Map.of(
                         "userId", userId,
@@ -71,7 +68,6 @@ public class JwtTokenProvider {
                 .get("userId", Long.class);
     }
 
-    // 토큰 정보를 검증하는 메서드
     public static boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(SIGNING_KEY).build().parseClaimsJws(token);
