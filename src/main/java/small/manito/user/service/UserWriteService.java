@@ -2,26 +2,29 @@ package small.manito.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import small.manito.global.type.ManitoResultStatus;
+import small.manito.global.exception.UserDuplicationException;
 import small.manito.group.repository.ManitoMappingRepository;
-import small.manito.querydsl.entity.ManitoMapping;
+import small.manito.querydsl.entity.User;
+import small.manito.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class UserWriteService {
 
+    private final UserRepository userRepository;
     private final ManitoMappingRepository manitoMappingRepository;
 
-    @Transactional
-    public ManitoMapping getManitoResult(Long groupId, Long userId, String maniteeName ) {
-        var manitoMapping = manitoMappingRepository.findResultManitoMapping(groupId, userId).get();
-        var status = maniteeName.equals(manitoMapping.getUser().getUserId())
-                ? ManitoResultStatus.CORRECT
-                : ManitoResultStatus.INCORRECT;
+    public void create(String userId, String password){
+        if( !userRepository.findByUserId(userId).isEmpty() ){
+            throw new UserDuplicationException(userId);
+        }
 
-        manitoMapping.setResultStatus(status);
-
-        return manitoMapping;
+        // SHA256 적용해보자
+        userRepository.save(
+                User.builder()
+                        .userId(userId)
+                        .password(password)
+                        .build()
+        );
     }
 }

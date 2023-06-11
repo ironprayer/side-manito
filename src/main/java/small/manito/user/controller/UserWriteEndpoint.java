@@ -12,12 +12,14 @@ import small.manito.auth.service.AuthService;
 import small.manito.global.exception.InvalidUserException;
 import small.manito.user.controller.request.PredictRequest;
 import small.manito.user.controller.response.PredictResponse;
+import small.manito.user.service.UserQueryService;
 import small.manito.user.service.UserWriteService;
 
 @RestController
 @RequiredArgsConstructor
 public class UserWriteEndpoint {
     private final UserWriteService userWriteService;
+    private final UserQueryService userQueryService;
     private final AuthService authService;
 
     @PostMapping("users")
@@ -26,9 +28,8 @@ public class UserWriteEndpoint {
     ){
         if(!authService.hasTextUser(loginRequest.getId(), loginRequest.getPassword())) throw new InvalidUserException();
 
-        authService.create(loginRequest.getId(), loginRequest.getPassword());
+        userWriteService.create(loginRequest.getId(), loginRequest.getPassword());
 
-        // 아이디 중복만 체크해서 알려주면 되겠다
     };
 
     @PostMapping("users/login")
@@ -43,7 +44,7 @@ public class UserWriteEndpoint {
             @RequestBody PredictRequest predictRequest,
             @AuthenticationPrincipal AuthPayload authPayload
     ){
-        return PredictResponse.from(userWriteService.getManitoResult(predictRequest.getGroupId()
+        return PredictResponse.from(userQueryService.getManitoResult(predictRequest.getGroupId()
                 , authPayload.getUserId()
                 , predictRequest.getManiteeName()));
     }
