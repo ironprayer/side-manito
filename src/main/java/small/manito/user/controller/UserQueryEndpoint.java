@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import small.manito.auth.AuthPayload;
+import small.manito.querydsl.entity.User;
 import small.manito.user.controller.response.ChatTargetResponse;
 import small.manito.user.controller.response.PredictResponse;
 import small.manito.user.controller.response.UserResponse;
@@ -21,8 +22,12 @@ public class UserQueryEndpoint {
     UserResponse getUser(
             @RequestParam("id") Long id
     ){
+        User user = userQueryService.getUser(id);
         return UserResponse.builder()
-                .id(userQueryService.getUser(id).getUserId())
+                .id(user.getId())
+                .userId(user.getUserId())
+                .nickName(user.getNickName())
+                .name(user.getName())
                 .build();
     }
 
@@ -30,8 +35,12 @@ public class UserQueryEndpoint {
     UserResponse getMyInfo(
             @AuthenticationPrincipal AuthPayload authPayload
             ){
+        User user = userQueryService.getUser(authPayload.getUserId());
         return UserResponse.builder()
-                .id(userQueryService.getUser(authPayload.getUserId()).getUserId())
+                .id(user.getId())
+                .userId(user.getUserId())
+                .nickName(user.getNickName())
+                .name(user.getName())
                 .build();
     }
 
